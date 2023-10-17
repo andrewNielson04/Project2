@@ -13,6 +13,7 @@ public class Board {
     }
 
     public void setPiece(int row, int col, Piece piece) {
+        board[row][col] = piece;
         piece.setPosition(row, col);
     }
 
@@ -75,10 +76,7 @@ public class Board {
     // Movement helper functions
     public boolean verifySourceAndDestination(int startRow, int startCol, int endRow, int endCol, boolean isBlack) {
         if(startRow <= 7 && startRow >= 0 && endRow <= 7 && endRow >= 0 && endCol <= 7 && endCol >= 0 && startCol <= 7 && startCol >= 0) {
-            if(startRow - endRow == 0 && startCol - endCol == 0) { // Doesn't move
-                return true;
-            }
-            if(this.getPiece(startRow, startCol) != null) { // redundant??
+            if(this.getPiece(startRow, startCol) != null) {
                 if(this.getPiece(startRow, startCol).getIsBlack() == isBlack) {
                     if(this.getPiece(endRow, endCol) == null || this.getPiece(endRow, endCol).getIsBlack() != isBlack) {
                         return true;
@@ -90,105 +88,88 @@ public class Board {
     }
 
     public boolean verifyAdjacent(int startRow, int startCol, int endRow, int endCol) {
-        if(this.getPiece(startRow, startCol) != null) {
-            if (verifySourceAndDestination(startRow, startCol, endRow, endCol, this.getPiece(startRow, startCol).getIsBlack())) {
-                int horizontalChange = Math.abs(startCol - endCol);
-                int verticalChange = Math.abs(startRow - endRow);
-                if ((horizontalChange <= 1 && verticalChange <= 1)) {
-                    return true;
-                }
-            }
+        int horizontalChange = Math.abs(startCol - endCol);
+        int verticalChange = Math.abs(startRow - endRow);
+        if ((horizontalChange <= 1 && verticalChange <= 1)) {
+            return true;
         }
         return false;
     }
 
     public boolean verifyHorizontal(int startRow, int startCol, int endRow, int endCol) {
-        if(this.getPiece(startRow, startCol) != null) {
-            if (verifySourceAndDestination(startRow, startCol, endRow, endCol, this.getPiece(startRow, startCol).getIsBlack())) {
-                if (startRow == endRow) {
-                    if (endCol - startCol <= -1) {
-                        for (int i = startCol - 1; i > endCol; i--) {
-                            if (this.getPiece(startRow, i) != null) {
-                                return false;
-                            }
-                        }
+        if (startRow == endRow) {
+            if (endCol - startCol <= -1) {
+                for (int i = startCol - 1; i > endCol; i--) {
+                    if (this.getPiece(startRow, i) != null) {
+                        return false;
                     }
-                    else if (endCol - startCol >= 1) {
-                        for (int i = startCol + 1; i < endCol; i++) {
-                            if (this.getPiece(startRow, i) != null) {
-                                return false;
-                            }
-                        }
+                }
+            } else if (endCol - startCol >= 1) {
+                for (int i = startCol + 1; i < endCol; i++) {
+                    if (this.getPiece(startRow, i) != null) {
+                        return false;
                     }
-                    return true;
                 }
             }
+            return true;
         }
         return false;
     }
 
     public boolean verifyVertical(int startRow, int startCol, int endRow, int endCol) {
-        if(this.getPiece(startRow, startCol) != null) {
-            if (verifySourceAndDestination(startRow, startCol, endRow, endCol, this.getPiece(startRow, startCol).getIsBlack())) {
-                if (startCol == endCol) {
-                    if (endRow - startRow <= -1) {
-                        for (int i = startRow - 1; i > endRow; i--) {
-                            if (this.getPiece(i, startCol) != null) {
-                                return false;
-                            }
-                        }
+        if (startCol == endCol) {
+            if (endRow - startRow <= -1) {
+                for (int i = startRow - 1; i > endRow; i--) {
+                    if (this.getPiece(i, startCol) != null) {
+                        return false;
                     }
-                    else if (endRow - startRow >= 1) {
-                        for (int i = startRow + 1; i < endRow; i++) {
-                            if (this.getPiece(i, startCol) != null) {
-                                return false;
-                            }
-                        }
-                    }
-                    return true;
                 }
             }
+            else if (endRow - startRow >= 1) {
+                for (int i = startRow + 1; i < endRow; i++) {
+                    if (this.getPiece(i, startCol) != null) {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
         return false;
     }
 
     public boolean verifyDiagonal(int startRow, int startCol, int endRow, int endCol) {
-        if(this.getPiece(startRow, startCol) != null) {
-            if (verifySourceAndDestination(startRow, startCol, endRow, endCol, this.getPiece(startRow, startCol).getIsBlack())) {
-                if (startRow - endRow == startCol - endCol) {
-                    if (endCol - startCol <= -1) { // Up
-                        if (endRow - startRow <= -1) { // Left
-                            for (int i = startCol - 1; i > startCol; i--) {
-                                if (this.getPiece(i + startRow - startCol, i) != null) {
-                                    return false;
-                                }
-                            }
-                        } else { // Right
-                            for (int i = startCol + 1; i < endCol; i++) {
-                                if (this.getPiece(startRow + startCol - i, i) != null) {
-                                    return false;
-                                }
-                            }
-                        }
-                    } else if (endCol - startCol >= 1) { // Down
-                        if (endRow - startRow <= -1) { // Left
-                            for (int i = startCol + 1; i < endCol; i++) {
-                                if (this.getPiece(i + startRow - startCol, i) != null) {
-                                    return false;
-                                }
-                            }
-                        } else { // Right
-                            for (int i = startCol - 1; i > endCol; i--) {
-                                if (this.getPiece(startRow + startCol - i, i) != null) {
-                                    return false;
-                                }
-                            }
+        if (Math.abs(startRow - endRow) == Math.abs(startCol - endCol)) {
+            if (endCol - startCol <= -1) { // Left
+                if (endRow - startRow <= -1) { // Up
+                    for (int i = startCol - 1; i > endCol; i--) {
+                        if (this.getPiece(startRow - startCol + i, i) != null) {
+                            return false;
                         }
                     }
-                    return true;
+                } else { // Down
+                    for (int i = startCol - 1; i > endCol; i--) {
+                        if (this.getPiece(startRow + startCol - i, i) != null) {
+                            return false;
+                        }
+                    }
+                }
+            } else if (endCol - startCol >= 1) { // Right
+                if (endRow - startRow <= -1) { // Up
+                    for (int i = startCol + 1; i < endCol; i++) {
+                        if (this.getPiece(startRow + startCol - i, i) != null) {
+                            return false;
+                        }
+                    }
+                } else { // Down
+                    for (int i = startCol + 1; i < endCol; i++) {
+                        if (this.getPiece(i + startRow - startCol, i) != null) {
+                            return false;
+                        }
+                    }
                 }
             }
+            return true;
         }
-         return false;
+        return false;
     }
 }
