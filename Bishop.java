@@ -1,3 +1,4 @@
+// Written by Andrew Nielson, niels880 and Will Borgerding, borge369
 public class Bishop {
     // Instance variables
     private int row, col;
@@ -14,8 +15,10 @@ public class Bishop {
         this.isBlack = isBlack;
     }
     public boolean isMoveLegal(Board board, int endRow, int endCol) {
-        if (board.verifyDiagonal(this.row, this.col, endRow, endCol)) {
-            return true;
+        if(board.verifySourceAndDestination(this.row, this.col, endRow, endCol, this.isBlack)) {
+            if (board.verifyDiagonal(this.row, this.col, endRow, endCol)) {
+                return true;
+            }
         }
         return false;
     }

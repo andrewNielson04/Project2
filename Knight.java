@@ -1,3 +1,4 @@
+// Written by Andrew Nielson, niels880 and Will Borgerding, borge369
 public class Knight {
     private int row, col;
     private boolean isBlack;
@@ -20,10 +21,12 @@ public class Knight {
      * @return True if the move to the destination square is legal, false otherwise.
      */
     public boolean isMoveLegal(Board board, int endRow, int endCol) {
-        int horizontalDistance = Math.abs(endCol - this.col);
-        int verticalDistance = Math.abs(endRow - this.row);
-        if(horizontalDistance + verticalDistance == 3 && horizontalDistance != 0 && verticalDistance != 0) {
-            return true;
+        if(board.verifySourceAndDestination(this.row, this.col, endRow, endCol, this.isBlack)) {
+            int horizontalDistance = Math.abs(endCol - this.col);
+            int verticalDistance = Math.abs(endRow - this.row);
+            if (horizontalDistance + verticalDistance == 3 && horizontalDistance != 0 && verticalDistance != 0) {
+                return true;
+            }
         }
         return false;
     }

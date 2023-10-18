@@ -1,3 +1,4 @@
+// Written by Andrew Nielson, niels880 and Will Borgerding, borge369
 import java.util.Scanner;
 
 public class Piece {
@@ -79,7 +80,30 @@ public class Piece {
      * @param isBlack Color of the pawn
      */
     public void promotePawn(int row, boolean isBlack) {
-
+        System.out.println("Pawn promotion! Enter Unicode character for desired piece:");
+        System.out.println("    Queen: q");
+        System.out.println("    Rook: r");
+        System.out.println("    Bishop: b");
+        System.out.println("    Knight: k");
+        System.out.println("(Defaults to queen if invalid input)"); // prompt for pawn promotion
+        Scanner scanner = new Scanner(System.in); // asks for input
+        String s = scanner.nextLine();
+        if(s.equals("r")) { // user chooses a rook
+            if(isBlack) { this.character = '\u265c'; } // set to black rook if pawn is black
+            else { this.character = '\u2656'; } // set to white rook if pawn is black
+        }
+        else if(s.equals("b")) { // user chooses a bishop
+            if(isBlack) { this.character = '\u265d'; } // set to black bishop if pawn is black
+            else { this.character = '\u2657'; } // set to white bishop if pawn is white
+        }
+        else if(s.equals("k")) { // user chooses knight
+            if(isBlack) { this.character = '\u265e'; } // set to black bishop if pawn is  back
+            else { this.character = '\u2658'; } // set to white bishop if pawn is white
+        }
+        else { // user chooses queen or anything else
+            if(isBlack) { this.character = '\u265b'; } // set to black queen if pawn is black
+            else{ this.character = '\u2655'; } // set to white queen if pawn is white
+        }
     }
 
 
